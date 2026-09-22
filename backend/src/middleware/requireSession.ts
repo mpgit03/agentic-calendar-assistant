@@ -7,13 +7,12 @@ export type AuthContext = {
   email?: string;
   name?: string;
   userId: string;
-  token: Record<string, unknown>;
 };
 
 declare global {
   namespace Express {
     interface Request {
-      auth?: AuthContext;
+      calendarAuth?: AuthContext;
     }
   }
 }
@@ -47,12 +46,11 @@ export async function requireSession(
     const user = await ensureUser({ authUserId, email });
 
     // add auth info in ur req object
-    req.auth = {
+    req.calendarAuth = {
       authUserId,
       email,
       name: typeof claims.name === "string" ? claims.name : undefined,
       userId: user.id,
-      token: claims,
     };
 
     next();

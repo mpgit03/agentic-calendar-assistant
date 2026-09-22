@@ -12,7 +12,7 @@ connectionRouter.use(requireSession);
 
 connectionRouter.get("/", async (req, res) => {
   try {
-    const connection = await getCalendarConnection(req.auth!.userId);
+    const connection = await getCalendarConnection(req.calendarAuth!.userId);
 
     res.json({ connection });
   } catch {
@@ -35,7 +35,7 @@ connectionRouter.post("/connect", async (req, res) => {
         : `${process.env.APP_URL ?? "http://localhost:3000"}/dashboard`;
 
     const result = await createCalendarConnectUrl({
-      userId: req.auth!.userId,
+      userId: req.calendarAuth!.userId,
       refreshToken,
       redirectUrl,
     });
@@ -49,8 +49,8 @@ connectionRouter.post("/connect", async (req, res) => {
 connectionRouter.post("/refresh-status", async (req, res) => {
   try {
     const connection = await refreshCalendarConnection({
-      userId: req.auth!.userId,
-      authUserId: req.auth!.authUserId,
+      userId: req.calendarAuth!.userId,
+      authUserId: req.calendarAuth!.authUserId,
     });
 
     res.json({ connection });
